@@ -5,6 +5,12 @@ SET ADAPTER_NAME_WIFI=WiFi
 SET ADAPTER_NAME_WLAN=Ethernet
 SET IS_WLAN_CONNECTED=0
 
+@REM From https://stackoverflow.com/a/40388766
+if not "%1"=="am_admin" (
+    powershell -Command "Start-Process -Verb RunAs -FilePath '%0' -ArgumentList 'am_admin'"
+    exit /b
+)
+
 @REM Capture the output of the netsh command
 FOR /F "tokens=3" %%i IN ('netsh interface show interface name^="%ADAPTER_NAME_WLAN%" ^| findstr "Connected"') DO (
     if "%%i"=="Connected" SET IS_WLAN_CONNECTED=1
